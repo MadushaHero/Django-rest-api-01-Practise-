@@ -2,19 +2,20 @@ from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from rest_framework.parsers import JSONParser
 from .models import Article
-from .serializers import ArticlesSerializers
+from .serializers import ArticlesSerializer
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def article_list(request):
 
     if request.method == 'GET':
         articles = Article.objects.all()
-        serializer = ArticlesSerializers(articles,many=True)
+        serializer = ArticlesSerializer(articles,many=True)
         return JsonResponse(serializer.data,safe=False)
 
-    elif request.method == False:
+    elif request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = ArticlesSerializers(data=data)
+        serializer = ArticlesSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
