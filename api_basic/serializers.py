@@ -7,7 +7,7 @@ from .models import Article
 class ArticlesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ['id','title','author']
+        fields = ['id','title','author','email']
 
         
 
