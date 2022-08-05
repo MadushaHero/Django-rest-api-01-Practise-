@@ -19,35 +19,10 @@ from django.shortcuts import get_object_or_404
 
 
 
-class ArticleViewSet(viewsets.ViewSet):
-    def list(self,request):
-        articles = Article.objects.all()
-        serializer = ArticlesSerializer(articles,many=True)
-        return Response(serializer.data)
-    def create(self,request):
-         serializer = ArticlesSerializer(data=request.data)
-
-         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status =status.HTTP_201_CREATED)
-         return Response(serializer.errors, status =status.HTTP_400_BAD_REQUEST)
-    def retrieve(self,request,pk=None):
-         queryset = Article.objects.all()
-         article = get_object_or_404(queryset,pk=pk)
-         serializer = ArticlesSerializer(article)
-         return Response(serializer.data)
-    
-    def update(self,request,pk=None):
-        
-        article = Article.objects.get(pk=pk)
-
-          
-        serializer = ArticlesSerializer(article,data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status =status.HTTP_400_BAD_REQUEST)
+class ArticleViewSet(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.CreateModelMixin,mixins.UpdateModelMixin,mixins.RetrieveModelMixin,mixins.DestroyModelMixin):
+  
+    serializer_class = ArticlesSerializer
+    queryset = Article.objects.all()
 
 
    
